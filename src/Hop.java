@@ -20,10 +20,10 @@ public class Hop {
 			for (int i = 0; i < nums.size(); i++) {
 				list[i] = nums.get(i);
 			}
-			ArrayList<Integer> chosen = new ArrayList<Integer>();
-			System.out.println(minJumps(list, 0, list.length, chosen));
-			System.out.println(chosen);
-			
+			//ArrayList<Integer> chosen = new ArrayList<Integer>();
+			//System.out.println(minJumps(list, 0, list.length, chosen));
+			//System.out.println(chosen);
+
 			jumper(list); // Go get the shortest hops
 		} else {
 			System.out.println("Failure: File not found!");
@@ -61,52 +61,21 @@ public class Hop {
 		return nums;
 	} 
 
-
-
-	// Returns minimum number of jumps to reach arr[source] from arr[dest]
-	public static int minJumps(int arr[], int dest, int source, ArrayList<Integer> chosen)
-	{
-		// when source and dest are same
-		if (source == dest)
-			return 0;
-
-		// If value is 0, cannot jump, return arbitrary value
-		if (arr[dest] == 0)
-			return Integer.MAX_VALUE;
-
-		// Traverse through all the points reachable from arr[source]. Recursively
-		// get the minimum number of jumps needed to reach arr[dest] from these
-		// reachable points.
-		int min = Integer.MAX_VALUE; // store minimum number of hops
-		for (int i = dest + 1; i <= source && i <= dest + arr[dest]; i++)
-		{
-			int jumps = minJumps(arr, i, source, chosen);
-			if(jumps != Integer.MAX_VALUE && jumps + 1 < min)
-				min = jumps + 1;
-				chosen.add(i);
-		}
-
-		return min;
-	}
-
-
-	public static void jumper(int[] a) {
+	public static void jumper(int[] list) {
 		List<Integer> chosen = new ArrayList<Integer>();
-		jumper(a, 0, chosen, 0);
+		jumper(list, 0, list.length, chosen);
 	}
 
+	private static void jumper(int[] a, int start, int end, List<Integer> chosen) {
 
-	private static void jumper(int[] a, int index, List<Integer> chosen, int sum) {
-
-		if (a[index] == 0) {
+		if (a[start] == 0) {
 			// Value is 0, cannot move forward
 			return;
-		} else if (sum > a.length) {
-			// reached end of list, print the array
-			chosen.add(index);
-			System.out.println(chosen);
+		} else if (start == end) {
+			// start and end indices same. 
+			return;
 		} else {
-			int val = a[index]; // value at the index
+			int val = a[start]; // value at the index
 
 			// Build an array of all possible "hops" in descending order
 			int[] hops = new int[val];
@@ -117,7 +86,7 @@ public class Hop {
 			// explore these hops in descending order
 			for (int i = hops.length - 1; i > -1; i--) {
 				chosen.add(hops[i]);
-				jumper(a, index + 1, chosen, sum);
+				jumper(a, start + 1, a[start] + a[i], chosen);
 				//chosen.remove(chosen.size() - 1);
 			}
 
